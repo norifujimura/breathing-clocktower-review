@@ -1,2 +1,2 @@
-# breathing-roppongi-review
-Partial copy of breathing-roppongi repository for code review purpose.
+# breathing-clocktower-review
+Partial copy of breathing-clocktower repository for code review purpose.
