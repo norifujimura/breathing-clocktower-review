@@ -216,14 +216,14 @@ def stateCheck():
 
     if previousState != state:
         loadJson()
-        image = pygame.image.load("python/images/"+state+".jpeg")
+        image = pygame.image.load("./images/"+state+".jpeg")
         image = pygame.transform.smoothscale(image, (1920, 1500)) 
         image.set_alpha(45)
         counter = 0
 
 def loadJson():
     global state,json_data
-    with open("python/data/"+state+".json") as json_file:
+    with open("./data/"+state+".json") as json_file:
         json_data = json.load(json_file)
         pprint(json_data)
 
@@ -294,9 +294,9 @@ async def pygame_loop(delay):
     pygame.init() # 初期化
     screen = pygame.display.set_mode((1920,1080)) # ウィンドウサイズの指定
     pygame.display.set_caption("Breathing Clocktower") # ウィンドウの上の方に出てくるアレの指定
-    font = pygame.font.Font('python/fonts/NotoSansJP-Medium.ttf', 60)
-    font_m = pygame.font.Font('python/fonts/NotoSansJP-Medium.ttf', 40)
-    font_s = pygame.font.Font('python/fonts/NotoSansJP-Medium.ttf', 20)
+    font = pygame.font.Font('./fonts/NotoSansJP-Medium.ttf', 60)
+    font_m = pygame.font.Font('./fonts/NotoSansJP-Medium.ttf', 40)
+    font_s = pygame.font.Font('./fonts/NotoSansJP-Medium.ttf', 20)
     #minute = 0
     
     while(True):
