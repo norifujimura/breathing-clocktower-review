@@ -1,22 +1,4 @@
 #include <M5UnitENV.h>
-
-
-
-/*
-*******************************************************************************
-* Copyright (c) 2021 by M5Stack
-*                  Equipped with M5Core2 sample source code
-*                          配套  M5Core2 示例源代码
-* Visit for more information: https://docs.m5stack.com/en/unit/envIII
-* 获取更多资料请访问: https://docs.m5stack.com/zh_CN/unit/envIII
-*
-* Product: ENVIII_SHT30_QMP6988.  环境传感器
-* Date: 2022/7/20
-*******************************************************************************
-  Please connect to Port A,Read temperature, humidity and atmospheric pressure
-  and display them on the display screen
-  请连接端口A,读取温度、湿度和大气压强并在显示屏上显示
-*/
 #include <M5Core2.h>
 //#include <M5_ENV.h>
 #include "M5UnitENV.h"
