@@ -14,8 +14,8 @@ from bleak import BleakClient
 
 from datetime import datetime as dt
 
-#address = "19C40D9B-F748-1109-CF66-67D6BB739283" # 通信先のMacアドレス
-address = "24:58:7C:5C:83:DD"
+#address = "19C40D9B-F748-1109-CF66-67D6BB739283" # mac address of BLE target
+address = "24:58:7C:5C:83:DD" # mac address of BLE target
 CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8" # CHARACTERISTIC_UUID
 
 
@@ -118,43 +118,13 @@ async def ble_json(address,delay):
             
             #masseage_b = json.dumps(message).encode('utf-8')
             message_b = json.dumps(message).encode('utf-8')
-            # return rateを1 Hzに設定
+            # set return rate 1hz
             await client.write_gatt_char(CHARACTERISTIC_UUID,message_b,response=True)
             await asyncio.sleep(delay)
 
 def stateCheck():
     global minute,state,previousState,json_data,image,counter
     previousState = state
-    '''
-    if 0<=minute and minute<=3:
-        state = "azabu-chihiro"
-    if 4<=minute and minute<=7:
-        state = "azabu-haruhito"
-    if 8<=minute and minute<=11:
-        state = "azabu-miharu"
-    if 12<=minute and minute<=15:
-        state = "azabu-ohana"
-    if 16<=minute and minute<=19:
-        state = "azabu-sae"
-    if 20<=minute and minute<=23:
-        state = "minato-kaito"
-    if 24<=minute and minute<=27:
-        state = "minato-maiko"
-    if 28<=minute and minute<=31:
-        state = "minato-taito"
-    if 32<=minute and minute<=35:
-        state = "minato-yohko"
-    if 36<=minute and minute<=39:
-        state = "roppongi-hiroyuki"
-    if 40<=minute and minute<=43:
-        state = "roppongi-kyosei"
-    if 44<=minute and minute<=47:
-        state = "roppongi-masahiko"
-    if 48<=minute and minute<=51:
-        state = "roppongi-takenari"
-    if 52<=minute and minute<=59:
-        state = "roppongi-tatsuo"
-        '''
     
     if 0<=minute and minute<=1:
         state = "azabu-chihiro"
@@ -292,8 +262,10 @@ async def pygame_loop(delay):
     global x,y,font,font_m,font_s,screen,minute,state,json_data,image,counter,r,g,b
     fullscreen = False
     pygame.init() # 初期化
-    screen = pygame.display.set_mode((1920,1080)) # ウィンドウサイズの指定
-    pygame.display.set_caption("Breathing Clocktower") # ウィンドウの上の方に出てくるアレの指定
+    screen = pygame.display.set_mode((1920,1080)) # window size
+    pygame.display.set_caption("Breathing Clocktower") # window title
+
+    #the font make us possible to show JP 2byte chars
     font = pygame.font.Font('./fonts/NotoSansJP-Medium.ttf', 60)
     font_m = pygame.font.Font('./fonts/NotoSansJP-Medium.ttf', 40)
     font_s = pygame.font.Font('./fonts/NotoSansJP-Medium.ttf', 20)
