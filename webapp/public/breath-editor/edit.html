@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Breathing web tools</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.2/lib/p5.js"></script>  
+    <script src="./edit.js"></script>
+</head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">
+          <img src="images/icon.jpg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+          Breathing x
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <!--<a class="nav-link active" aria-current="page" href="#">Home</a>-->
+            <a class="nav-link" href="record.html">Record</a>
+            <a class="nav-link" href="record-ir.html">Record NCIR</a>
+            <a class="nav-link" href="edit.html">Edit</a>
+            <a class="nav-link" href="play.html">Play</a>
+            <a class="nav-link" href="workshop.html">Workshop</a>
+            <!--<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>-->
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="card">
+      <div class="card-header">
+        Edit v1 json
+      </div>
+      <div class="card-body">
+        <button type="button" class="btn btn-primary" id="openFileButton" onclick=openFileOne()>Open v1 json file</button>
+        <button type="button" class="btn btn-success" id="openFileButton" onclick=saveData()>Save v2 json file</button>
+        <!--
+        <button type="button" class="btn btn-primary" id="openFileButton" onclick=openFileOne()>Open v1 json file</button>
+        <button type="button" class="btn btn-success" id="openFileButton" onclick=saveFileTwo()>Save v2 json file</button>
+        <button type="button" class="btn btn-primary" id="openFileButton" onclick=openFileTwo()>Open v2-3 json file</button>
+        <button type="button" class="btn btn-success" id="openFileButton" onclick=saveFileThree()>Save v3 json file</button>
+        <button type="button" class="btn btn-info" id="one" onclick=connect(true)>ConnectBLEOne</button>
+        <button type="button" class="btn btn-info" id="two" onclick=connect(false)>ConnectBLETwo</button>
+        <button type="button" class="btn btn-success" id="openFileButton" onclick=saveData()>Save 2000 RGBW txt file</button>
+      -->
+      </div>
+      <div class="card-body">
+        <!--
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="check" checked>
+          <label class="custom-control-label" for="check">Use new coloring process.</label>
+        </div>
+      -->
+        
+        <div id = "name">Name:</div>
+        <div id = "type">Type:</div>
+        <div id = "version">Version:</div>
+        <div id = "length">Length:</div>
+        <div id = "milliseconds">Milliseconds:</div>
+        <div id = "milSecPerData">MillisecondsPerData:</div>
+        <div id = "high">High:</div>
+        <div id = "low">Low:</div>
+        <div id = "basePressure">BasePressure:</div>
+      </div>
+      <div class="card-body" id="viewCanvas" style="width:1000px;"></div>
+      <div class="card-body" style="width:1000px;">
+        <div id = "fps">FPS:</div>
+        <div>
+          <label for="baseAdjust" class="form-label" id="baseAdjustLabel">Base Adjust</label>
+          <input type="range" class="form-range" value = "0" min="-500" max="500" step ="0.1" id="baseAdjust">
+        </div>
+        <div>
+          <label for="ratio" class="form-label" id="ratiotLabel">Ratio</label>
+          <input type="range" class="form-range" value = "1" min="0.1" max="20.0" step ="0.01" id="ratio">
+        </div>
+        <div>
+          <label for="offset" class="form-label" id="offsetLabel">Offset</label>
+          <input type="range" class="form-range" value = "0" min="0" max="1000" id="offset">
+        </div>
+        <!--
+        <div>
+          <label for="peakWhite" class="form-label" id="peakWhiteLabel">Brightness peak:white</label>
+          <input type="range" class="form-range" value = "0" min="0" max="1000" id="peakWhite">
+        </div>
+        <div>
+          <label for="peakRGB" class="form-label" id="peakRGBLabel">Brightness peak:rgb</label>
+          <input type="range" class="form-range" value = "0" min="0" max="1000" id="peakRGB">
+        </div>
+        -->
+        <!--
+        <div>
+          <label for="whiteMax" class="form-label" id="whiteMaxLabel">Brightness white MAX</label>
+          <input type="range" class="form-range" value = "500" min="0" max="500" id="whiteMax">
+        </div>
+
+        <div>
+          <label for="whiteMin" class="form-label" id="whiteMinLabel">Brightness white MIN</label>
+          <input type="range" class="form-range" value = "0" min="0" max="500" id="whiteMin">
+        </div>
+
+        <div>
+          <label for="warmPeak" class="form-label" id="warmPeakLabel">Warm</label>
+          <input type="range" class="form-range" value = "500" min="0" max="500" id="warmPeak">
+        </div>
+
+        <div>
+          <label for="coolPeak" class="form-label" id="coolPeakLabel">Cool</label>
+          <input type="range" class="form-range" value = "0" min="0" max="500" id="coolPeak">
+        </div>
+      -->
+        
+        <label for="warm" class="form-label" id="warmLabel">Warm color</label>
+        <input type="color" value="#ff88ff" id = "warm"/>
+        <label for="cool" class="form-label" id="cooLabel">Cool color</label>
+        <input type="color" value="#88ffff" id = "cool"/>
+
+      </div>
+
+    </div>
+
+    <!--
+      <div class="container">
+        Recorder
+        <button type="button" class="btn btn-primary" id="open" onclick=openPort()>Open serial port</button>
+        <button type="button" class="btn btn-primary" id="save" onclick=saveData()>Save</button>
+      </div>
+      <div id="myContainer"></div>
+    -->
+    <!--
+    <button type="button" class="btn btn-secondary">Secondary</button>
+    <button type="button" class="btn btn-success">Success</button>
+    <button type="button" class="btn btn-danger">Danger</button>
+    <button type="button" class="btn btn-warning">Warning</button>
+    <button type="button" class="btn btn-info">Info</button>
+    <button type="button" class="btn btn-light">Light</button>
+    <button type="button" class="btn btn-dark">Dark</button>
+    <button type="button" class="btn btn-link">Link</button>
+    -->
+</body>
+</html>

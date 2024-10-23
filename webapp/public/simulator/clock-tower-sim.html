@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.js" integrity="sha512-pdHIQH5GDrd5eTHck+rfKnQhgRjKYtSw8UCQ9blobxwzQhE9LXLw5aTk78ktWY526mS0EwIcaJ/fROeIzHD34w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.min.js"></script>-->
+    <!--<link rel="stylesheet" type="text/css" href="style.css">-->
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <label><input type="checkbox" checked id = "audience">audience</label>
+    <label><input type="checkbox" checked id= "monitor">monitor</label>
+    <input type="range" min="0" max="100" value="50" class="slider" id="brightness">
+    <input id="files" type="file">
+    <output id="list"></output>
+    <canvas id="canvasTwo" height= '300'></canvas>
+    <script>
+
+var myCanvas;
+var lady;
+//var img;
+
+let w = 12;
+//let h = 145;
+let h = 300;
+let pitch = 1;
+
+let pixels =[];
+
+var audienceFlag= true;
+var monitorFlag= true;
+var brightnessRatio = 0.5;
+
+let slider = document.getElementById("brightness");
+
+slider.oninput = function() {
+  brightnessRatio  = float(this.value)/100.0;
+}
+
+let checkboxAudience = document.getElementById('audience');
+let checkboxMonitor = document.getElementById('monitor');
+checkboxAudience.checked = true;
+checkboxMonitor.checked = true;
+
+checkboxAudience.addEventListener('click', audienceClick);
+checkboxMonitor.addEventListener('click', monitorClick);
+
+function audienceClick(){
+  console.log("audienceClick")
+  if(checkboxAudience.checked ){
+    audienceFlag= true;
+  }else{
+    audienceFlag= false;
+  }
+}
+
+function monitorClick(){
+  console.log("monitorClick")
+  if(checkboxMonitor.checked ){
+    monitorFlag =true;
+  }else{
+    monitorFlag =false;
+  }
+}
+
+
+
+function preload() {
+   lady= loadModel('walk-lady-v3.obj');
+}
+
+ function setup() {
+  myCanvas = createCanvas(500, 1000, WEBGL);
+  
+  angleMode(DEGREES);
+  noStroke();
+
+  //let input = createFileInput(handleImage);
+  //input.position(0, 0);
+  for(var i =0;i<w;i++){
+    var temp= new Array;
+    for(var j =0;j<h;j++){
+        temp[j] = color(255,255,255);
+    }
+    pixels[i] = temp;
+  }
+}
+
+function draw() {
+  if (keyIsPressed === true) {
+    if (keyCode === ENTER) {
+      screenShot();
+    }
+  }
+  background(50);
+
+  // Enable orbiting with the mouse.
+  orbitControl(1, 1, 0.5);
+  let c = color(150,150,150);
+  ambientLight(c);
+  let c2 = color(250,170,170);
+  pointLight(c2, 150, -300, 150);
+  
+  /*
+  let c = color(255, 0, 0);
+  let lightPos = createVector(0, -150, 0);
+  pointLight(c, lightPos);
+  */
+    //for height 160cm person
+  translate(0,160,0);
+  
+  lightDots();
+  lightDotsReflection();
+  
+  //sphere(30);
+
+  // Draw the cylinder.
+  clockTower();
+  clockTowerCover();
+  //floorPlate();
+  if(audienceFlag){
+    person();
+  }
+
+  if(monitorFlag){
+    monitor();
+  }
+  
+
+}
+
+function clockTower(){
+  push();
+  translate(0,-250,0); //p5.js 3d coord is down is Y+ up is Y-
+  ambientMaterial(200,200,200);
+  specularMaterial(255);
+  shininess(200);
+  metalness(10);
+  
+  for(var i=0;i<24;i++){
+    angle = i* (360/24);
+    
+    push();
+      rotate(angle,[0,1,0]);
+      translate(50,0,0);
+      cylinder(4.5, 500);
+    pop();
+  }
+  cylinder(45, 500); 
+  pop();
+}
+
+function clockTowerCover(){
+    push();
+  translate(0,0,0); //p5.js 3d coord is down is Y+ up is Y-
+  ambientMaterial(10,10,10);
+  specularMaterial(10);
+  shininess(10);
+  
+  cylinder(65, 5); 
+  pop();
+}
+
+function floorPlate(){
+  push();
+  specularMaterial(200);
+  shininess(50);
+  translate(0,1,0); //p5.js 3d coord is down is Y+ up is Y-
+  box(1000, 2,1000);
+  pop();
+}
+
+function lightDots(){
+  //60LEDs per 1m
+  //step = 100/60 = 1.66666
+  //40cm /1.6 = 25leds
+  
+  lightFalloff(3, 0, 0);
+  var r = 50;
+
+  var r = 50;
+  for(var j=0;j<h;j++){
+    var y = - (h*pitch)+j*pitch ;
+    
+    for(var i=0;i<w;i++){
+      angle = i* (360/24)+(360/48);
+      let c = pixels[i][j];
+
+      let re = round(red(c)*brightnessRatio);
+      let g = round(green(c)*brightnessRatio);
+      let b = round(blue(c)*brightnessRatio);
+
+      if(re>255)re=255;
+      if(g>255)g=255;
+      if(b>255)b=255;
+
+      let c2= color(re,g,b);
+      
+      push();
+        rotate(-angle,[0,1,0]);
+        translate(r,y,0);
+        emissiveMaterial(c2);
+        box(3,pitch,3);
+      pop();
+      
+        
+      var x = cos(angle)* r*1.2;
+      var z = sin(angle)* r*1.2;
+      //var xtwo = sin(angle)* r*2;
+      //var ztwo = cos(angle)* r*2;
+
+      //spotLight(255, 0, 0, x, 0, z, 1, 0,1);
+      //let c = pixels[i][j];
+      //pointLight(c, x, y, z);
+    }
+  }
+}
+
+function lightDotsReflection(){
+
+    //60LEDs per 1m
+    //step = 100/60 = 1.66666
+    //40cm /1.6 = 25leds
+  
+  lightFalloff(3, 0, 0);
+
+  var r = 50;
+  for(var j=0;j<h;j++){
+    var y = (h*pitch)-j*pitch ;
+    
+    for(var i=0;i<w;i++){
+      angle = i* (360/24)+(360/48);
+      let c = pixels[i][j];
+
+      let re = round(red(c)*brightnessRatio);
+      let g = round(green(c)*brightnessRatio);
+      let b = round(blue(c)*brightnessRatio);
+
+      if(re>255)re=255;
+      if(g>255)g=255;
+      if(b>255)b=255;
+
+      let c2= color(re,g,b);
+      
+      push();
+        rotate(-angle,[0,1,0]);
+        translate(r,y,0);
+        emissiveMaterial(c2);
+        box(0.5);
+      pop();
+
+    }
+  }
+}
+
+function person(){
+  //for height 160cm person standing on 
+  push();
+  translate(0,-80,150); //p5.js 3d coord is down is Y+ up is Y-
+  rotate(90,[1,0,0]);
+  scale(0.1);
+  //box(40, 160,40);
+  model(lady);
+  pop();
+}
+
+function monitor(){
+  //for height 160cm person standing on 
+  push();
+  translate(120,-80,0); //p5.js 3d coord is down is Y+ up is Y-
+   ambientMaterial(0,0,0);
+  box(30, 160,10);
+  pop();
+  push();
+  translate(120,-140,1); //p5.js 3d coord is down is Y+ up is Y-
+   ambientMaterial(200,200,255);
+  box(23, 15,10);//10inch
+  pop();
+}
+
+function screenShot(){
+  console.log("Screenshot")
+  let name = year().toString()+day().toString()+hour().toString()+minute().toString()+second().toString();
+  saveCanvas(myCanvas,"screenshot"+name,"png");
+}
+
+    function handleFileSelect(evt) {
+        var files = evt.target.files
+        for (var i = 0, f; f = files[i]; i++) {
+            var reader = new FileReader()
+            reader.onload = (function(theFile) {
+                return function(e) {
+                var span = document.createElement('span')
+                span.innerHTML = ['<img class="thumb"src="', e.target.result,
+                '"title="', escape(theFile.name), '" height="240" />'
+                ].join('')
+                document.getElementById('list').insertBefore(span, null)
+                getInfo(e.target.result)
+                        }
+            })(f)
+            reader.readAsDataURL(f)
+        }
+    }
+    document.getElementById('files').addEventListener('change', handleFileSelect, false)
+
+    function getInfo(pic) {
+        var ctxt = canvasTwo.getContext('2d');
+        var img = new Image;
+        img.src = pic;
+
+        img.onload = function() {
+            alert("onload");
+            //ctxt.drawImage(img,0,0,w,h);
+            ctxt.drawImage(img,0,0,w,h);
+            //var data = ctxt.getImageData(0,0,img.width, img.height).data;
+            var data = ctxt.getImageData(0,0,w,h).data;
+
+            var red = data[0],green = data[1],blue = data[2];
+            for(var i =0;i<h;i++){
+                for(var j =0;j<w;j++){
+
+
+                    let index = (i*w+j)*4;
+                    //console.log("index:"+index);
+                    //pixels[j][i] = color(data[index],data[index+1],data[index+2]);
+                    pixels[j][i] = color(data[index],data[index+1],data[index+2]);
+                    //console.log(data[index]+":"+data[index+1]+":"+data[index+2]);
+                    //pixels[j][i] = color(h*2,j*10,255);
+
+                    
+		           // alert("hight is " + img.height + "px,width is " + img.width + "px,pix(1,1)'s r:"+red + ',g:' + green + ',b:' + blue);
+                }
+            }
+            
+            alert("hight is " + img.height + "px,width is " + img.width+ "data.length is " + data.length);
+        }
+    }
+    </script>
+  </body>
+</html>
