@@ -12,11 +12,11 @@ Javascript(Web-app for Chrome to Record and Edit waveforms, WebSerial), Python+p
   * https://github.com/norifujimura/breathing-clocktower-review/tree/main/python 
 * M5stack Arduino code to receive waveform LED data via BLE from python app
   * https://github.com/norifujimura/breathing-clocktower-review/tree/main/m5stack/BLE_receive_binary_neopixel_ready
-<img src = "./doc-images/overview1.png" width = "600">
-<img src = "./doc-images/overview2.png" width = "600">
+<img src = "./doc-images/overview1.png" width = "1000">
+<img src = "./doc-images/overview2.png" width = "1000">
 
 ## Experience
-<img src = "./doc-images/experience.png" width = "800">
+<img src = "./doc-images/experience.png" width = "1200">
 
 ## Architecture
-<img src = "./doc-images/architecture-breathing-clocktower.jpg" width = "800">
+<img src = "./doc-images/architecture-breathing-clocktower.jpg" width = "1200">
